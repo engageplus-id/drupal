@@ -244,6 +244,40 @@ function mymodule_engageplus_user_login($account, $user_data) {
 3. **Check JavaScript**: Ensure JavaScript is enabled in browser
 4. **Check CDN**: EngagePlus CDN may be temporarily unavailable
 
+### Widget Calls Wrong API URL (localhost instead of engageplus.id)
+
+If you're seeing API calls to your local site (e.g., `http://localhost:8090/api/widget/public`) instead of `https://engageplus.id/api/widget/public`:
+
+1. **Clear Drupal Cache**:
+   ```bash
+   drush cr
+   ```
+   Or via admin interface: Configuration > Development > Clear all caches
+
+2. **Run Database Updates**:
+   ```bash
+   drush updb
+   ```
+   Or visit `/update.php` in your browser
+
+3. **Verify API Base URL**: Go to Configuration > EngagePlus and check that "API Base URL" is set to `https://engageplus.id`
+
+4. **Enable Debug Mode**: Enable debug mode in EngagePlus settings and check browser console for:
+   ```
+   EngagePlus: baseUrl set to: https://engageplus.id
+   ```
+
+5. **Re-save Configuration**: If the above doesn't work, re-save the EngagePlus configuration form to ensure the api_base_url is properly saved
+
+### After Updating the Module
+
+When updating from an earlier version:
+
+1. **Always clear cache** after updating
+2. **Run database updates**: `drush updb` or visit `/update.php`
+3. **Check configuration**: Verify all settings are still correct
+4. **Test the widget**: Ensure authentication still works
+
 ## Security
 
 ### Data Privacy

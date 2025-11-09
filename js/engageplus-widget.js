@@ -54,6 +54,7 @@
             
             if (debugMode) {
               console.log('EngagePlus: Initializing widget', containerId, config);
+              console.log('EngagePlus: baseUrl set to:', config.baseUrl || 'NOT SET');
             }
 
             // Initialize the widget with success/error handlers.

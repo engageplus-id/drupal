@@ -54,3 +54,20 @@ function engageplus_uninstall() {
   \Drupal::configFactory()->getEditable('engageplus.settings')->delete();
 }
 
+/**
+ * Add api_base_url configuration for existing installations.
+ */
+function engageplus_update_8101() {
+  $config = \Drupal::configFactory()->getEditable('engageplus.settings');
+  
+  // Only set if not already set.
+  if (empty($config->get('api_base_url'))) {
+    $config->set('api_base_url', 'https://engageplus.id');
+    $config->save();
+    
+    return t('Added API Base URL configuration with default value.');
+  }
+  
+  return t('API Base URL already configured.');
+}
+
