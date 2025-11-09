@@ -64,6 +64,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API Base URL is now configurable (defaults to https://engageplus.id)
 - Debug logging now shows issuer parameter value
 
+## [1.1.0] - 2025-11-09
+
+### Added
+- Widget customization settings in admin configuration
+  * Layout & Sizing: width, max width, padding
+  * Colors: background, primary, text, secondary text, button hover
+  * Borders & Shadows: border radius, border color, border width, box shadow, button border radius
+  * Typography: font family
+- Link to EngagePlus widget customization documentation in admin form
+- Automatic conversion of settings to widget styles object
+- Support for all styling options from EngagePlus widget API
+
+### Fixed
+- Removed persistent loading spinner from widget container
+- Widget template now renders empty container for widget.js to populate
+- Loading class no longer applied by default
+
+### Changed
+- Widget Appearance section in config form now collapsed by default
+- Organized style settings into collapsible sub-sections (Layout, Colors, Borders, Typography)
+- Configuration schema updated to include all style settings
+
 ## [Unreleased]
 
 ### Planned Features

@@ -250,6 +250,32 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
       $widget_config['showLabels'] = (bool) $config['show_labels'];
     }
 
+    // Apply custom styles from global configuration.
+    $styles = [];
+    
+    // Get all style settings from config.
+    $style_keys = [
+      'width', 'max_width', 'padding',
+      'background_color', 'primary_color', 'text_color', 
+      'secondary_text_color', 'button_hover_color',
+      'border_radius', 'border_color', 'border_width', 
+      'box_shadow', 'button_border_radius',
+      'font_family',
+    ];
+    
+    foreach ($style_keys as $key) {
+      $value = $global_config->get('styles.' . $key);
+      if (!empty($value)) {
+        // Convert snake_case to camelCase for JavaScript
+        $js_key = lcfirst(str_replace('_', '', ucwords($key, '_')));
+        $styles[$js_key] = $value;
+      }
+    }
+    
+    if (!empty($styles)) {
+      $widget_config['styles'] = $styles;
+    }
+
     // Add custom CSS class.
     $css_classes = ['engageplus-widget-container'];
     if (!empty($config['custom_css_class'])) {

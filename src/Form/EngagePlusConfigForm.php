@@ -96,28 +96,12 @@ class EngagePlusConfigForm extends ConfigFormBase {
     ];
 
     $form['widget_settings'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Widget Appearance'),
-      '#description' => $this->t('Customize the appearance of the EngagePlus widget. These settings can be overridden in individual block configurations.'),
-    ];
-
-    $form['widget_settings']['button_text'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Button Text'),
-      '#description' => $this->t('Custom text for the login button.'),
-      '#default_value' => $config->get('button_text'),
-    ];
-
-    $form['widget_settings']['theme'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Theme'),
-      '#description' => $this->t('Widget color theme.'),
-      '#options' => [
-        '' => $this->t('Default'),
-        'light' => $this->t('Light'),
-        'dark' => $this->t('Dark'),
-      ],
-      '#default_value' => $config->get('theme') ?: '',
+      '#description' => $this->t('Customize the appearance of the EngagePlus widget. These settings can be overridden in individual block configurations. <a href="@url" target="_blank">View documentation</a>', [
+        '@url' => 'https://engageplus.id/docs/widget-customization',
+      ]),
+      '#open' => FALSE,
     ];
 
     $form['widget_settings']['show_labels'] = [
@@ -125,6 +109,140 @@ class EngagePlusConfigForm extends ConfigFormBase {
       '#title' => $this->t('Show provider labels'),
       '#description' => $this->t('Display text labels next to provider icons.'),
       '#default_value' => $config->get('show_labels') ?? TRUE,
+    ];
+
+    // Layout & Sizing
+    $form['widget_settings']['layout'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Layout & Sizing'),
+      '#open' => FALSE,
+    ];
+
+    $form['widget_settings']['layout']['width'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Width'),
+      '#description' => $this->t('Width of the widget container (e.g., 400px, 100%, 30rem)'),
+      '#default_value' => $config->get('styles.width') ?: '400px',
+      '#size' => 20,
+    ];
+
+    $form['widget_settings']['layout']['max_width'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Max Width'),
+      '#description' => $this->t('Maximum width (useful for responsive layouts)'),
+      '#default_value' => $config->get('styles.max_width') ?: '100%',
+      '#size' => 20,
+    ];
+
+    $form['widget_settings']['layout']['padding'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Padding'),
+      '#description' => $this->t('Inner padding of the widget (e.g., 24px, 1.5rem)'),
+      '#default_value' => $config->get('styles.padding') ?: '24px',
+      '#size' => 20,
+    ];
+
+    // Colors
+    $form['widget_settings']['colors'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Colors'),
+      '#open' => FALSE,
+    ];
+
+    $form['widget_settings']['colors']['background_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Background Color'),
+      '#description' => $this->t('Background color of the widget'),
+      '#default_value' => $config->get('styles.background_color') ?: '#ffffff',
+    ];
+
+    $form['widget_settings']['colors']['primary_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Primary Color'),
+      '#description' => $this->t('Primary brand color (links, hover effects)'),
+      '#default_value' => $config->get('styles.primary_color') ?: '#4f46e5',
+    ];
+
+    $form['widget_settings']['colors']['text_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Text Color'),
+      '#description' => $this->t('Main text color'),
+      '#default_value' => $config->get('styles.text_color') ?: '#111827',
+    ];
+
+    $form['widget_settings']['colors']['secondary_text_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Secondary Text Color'),
+      '#description' => $this->t('Secondary/muted text color'),
+      '#default_value' => $config->get('styles.secondary_text_color') ?: '#6b7280',
+    ];
+
+    $form['widget_settings']['colors']['button_hover_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Button Hover Color'),
+      '#description' => $this->t('Background color when hovering over buttons'),
+      '#default_value' => $config->get('styles.button_hover_color') ?: '#f9fafb',
+    ];
+
+    // Borders & Shadows
+    $form['widget_settings']['borders'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Borders & Shadows'),
+      '#open' => FALSE,
+    ];
+
+    $form['widget_settings']['borders']['border_radius'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Border Radius'),
+      '#description' => $this->t('Corner rounding of the widget container (e.g., 8px, 1rem)'),
+      '#default_value' => $config->get('styles.border_radius') ?: '8px',
+      '#size' => 20,
+    ];
+
+    $form['widget_settings']['borders']['border_color'] = [
+      '#type' => 'color',
+      '#title' => $this->t('Border Color'),
+      '#description' => $this->t('Color of the widget border'),
+      '#default_value' => $config->get('styles.border_color') ?: '#e5e7eb',
+    ];
+
+    $form['widget_settings']['borders']['border_width'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Border Width'),
+      '#description' => $this->t('Thickness of the border (e.g., 2px, 0.125rem)'),
+      '#default_value' => $config->get('styles.border_width') ?: '2px',
+      '#size' => 20,
+    ];
+
+    $form['widget_settings']['borders']['box_shadow'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Box Shadow'),
+      '#description' => $this->t('Drop shadow effect (e.g., 0 10px 15px -3px rgba(0, 0, 0, 0.1))'),
+      '#default_value' => $config->get('styles.box_shadow') ?: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      '#maxlength' => 255,
+    ];
+
+    $form['widget_settings']['borders']['button_border_radius'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Button Border Radius'),
+      '#description' => $this->t('Corner rounding of provider buttons (e.g., 6px, 0.5rem)'),
+      '#default_value' => $config->get('styles.button_border_radius') ?: '6px',
+      '#size' => 20,
+    ];
+
+    // Typography
+    $form['widget_settings']['typography'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Typography'),
+      '#open' => FALSE,
+    ];
+
+    $form['widget_settings']['typography']['font_family'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Font Family'),
+      '#description' => $this->t('Font family for all widget text'),
+      '#default_value' => $config->get('styles.font_family') ?: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      '#maxlength' => 255,
     ];
 
     $form['user_settings'] = [
@@ -225,20 +343,52 @@ class EngagePlusConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('engageplus.settings')
-      ->set('client_id', $form_state->getValue('client_id'))
+    $config = $this->config('engageplus.settings');
+    
+    $config->set('client_id', $form_state->getValue('client_id'))
       ->set('api_base_url', $form_state->getValue('api_base_url'))
       ->set('widget_url', $form_state->getValue('widget_url'))
-      ->set('button_text', $form_state->getValue('button_text'))
-      ->set('theme', $form_state->getValue('theme'))
       ->set('show_labels', $form_state->getValue('show_labels'))
       ->set('auto_create_users', $form_state->getValue('auto_create_users'))
       ->set('default_role', $form_state->getValue('default_role'))
       ->set('username_pattern', $form_state->getValue('username_pattern'))
       ->set('email_verification', $form_state->getValue('email_verification'))
       ->set('debug_mode', $form_state->getValue('debug_mode'))
-      ->set('redirect_after_login', $form_state->getValue('redirect_after_login'))
-      ->save();
+      ->set('redirect_after_login', $form_state->getValue('redirect_after_login'));
+    
+    // Save widget style settings
+    $layout = $form_state->getValue(['widget_settings', 'layout']);
+    $colors = $form_state->getValue(['widget_settings', 'colors']);
+    $borders = $form_state->getValue(['widget_settings', 'borders']);
+    $typography = $form_state->getValue(['widget_settings', 'typography']);
+    
+    if ($layout) {
+      $config->set('styles.width', $layout['width'])
+        ->set('styles.max_width', $layout['max_width'])
+        ->set('styles.padding', $layout['padding']);
+    }
+    
+    if ($colors) {
+      $config->set('styles.background_color', $colors['background_color'])
+        ->set('styles.primary_color', $colors['primary_color'])
+        ->set('styles.text_color', $colors['text_color'])
+        ->set('styles.secondary_text_color', $colors['secondary_text_color'])
+        ->set('styles.button_hover_color', $colors['button_hover_color']);
+    }
+    
+    if ($borders) {
+      $config->set('styles.border_radius', $borders['border_radius'])
+        ->set('styles.border_color', $borders['border_color'])
+        ->set('styles.border_width', $borders['border_width'])
+        ->set('styles.box_shadow', $borders['box_shadow'])
+        ->set('styles.button_border_radius', $borders['button_border_radius']);
+    }
+    
+    if ($typography) {
+      $config->set('styles.font_family', $typography['font_family']);
+    }
+    
+    $config->save();
 
     parent::submitForm($form, $form_state);
   }
