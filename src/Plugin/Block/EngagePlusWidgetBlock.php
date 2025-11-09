@@ -223,10 +223,14 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
       $api_base_url = 'https://engageplus.id';
     }
     
+    // Get the full callback URL.
+    $callback_url = $GLOBALS['base_url'] . '/engageplus/auth/callback';
+    
     $widget_config = [
       'clientId' => $client_id,
       'containerId' => $config['container_id'],
       'issuer' => $api_base_url,
+      'redirectUri' => $callback_url,
     ];
 
     // Apply button text (block config overrides global).

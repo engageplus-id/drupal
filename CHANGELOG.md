@@ -47,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Widget now correctly uses EngagePlus API URL instead of Drupal site URL for API calls
 - Widget configuration now uses correct `issuer` parameter (was incorrectly using `baseUrl`)
+- Widget configuration now includes `redirectUri` parameter to ensure proper OAuth callback
+- Callback page now properly loads and initializes widget.js to process OAuth tokens
+- Callback handler now sends tokens to Drupal backend for user authentication
 - Fallback logic ensures api_base_url always has a value for upgraded installations
 
 ### Changed
