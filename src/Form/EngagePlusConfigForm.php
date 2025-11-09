@@ -356,36 +356,57 @@ class EngagePlusConfigForm extends ConfigFormBase {
       ->set('debug_mode', $form_state->getValue('debug_mode'))
       ->set('redirect_after_login', $form_state->getValue('redirect_after_login'));
     
-    // Save widget style settings
-    $layout = $form_state->getValue(['widget_settings', 'layout']);
-    $colors = $form_state->getValue(['widget_settings', 'colors']);
-    $borders = $form_state->getValue(['widget_settings', 'borders']);
-    $typography = $form_state->getValue(['widget_settings', 'typography']);
+    // Save widget style settings - flatten nested arrays
+    $values = $form_state->getValues();
     
-    if ($layout) {
-      $config->set('styles.width', $layout['width'])
-        ->set('styles.max_width', $layout['max_width'])
-        ->set('styles.padding', $layout['padding']);
+    // Layout settings
+    if (isset($values['width'])) {
+      $config->set('styles.width', $values['width']);
+    }
+    if (isset($values['max_width'])) {
+      $config->set('styles.max_width', $values['max_width']);
+    }
+    if (isset($values['padding'])) {
+      $config->set('styles.padding', $values['padding']);
     }
     
-    if ($colors) {
-      $config->set('styles.background_color', $colors['background_color'])
-        ->set('styles.primary_color', $colors['primary_color'])
-        ->set('styles.text_color', $colors['text_color'])
-        ->set('styles.secondary_text_color', $colors['secondary_text_color'])
-        ->set('styles.button_hover_color', $colors['button_hover_color']);
+    // Color settings
+    if (isset($values['background_color'])) {
+      $config->set('styles.background_color', $values['background_color']);
+    }
+    if (isset($values['primary_color'])) {
+      $config->set('styles.primary_color', $values['primary_color']);
+    }
+    if (isset($values['text_color'])) {
+      $config->set('styles.text_color', $values['text_color']);
+    }
+    if (isset($values['secondary_text_color'])) {
+      $config->set('styles.secondary_text_color', $values['secondary_text_color']);
+    }
+    if (isset($values['button_hover_color'])) {
+      $config->set('styles.button_hover_color', $values['button_hover_color']);
     }
     
-    if ($borders) {
-      $config->set('styles.border_radius', $borders['border_radius'])
-        ->set('styles.border_color', $borders['border_color'])
-        ->set('styles.border_width', $borders['border_width'])
-        ->set('styles.box_shadow', $borders['box_shadow'])
-        ->set('styles.button_border_radius', $borders['button_border_radius']);
+    // Border settings
+    if (isset($values['border_radius'])) {
+      $config->set('styles.border_radius', $values['border_radius']);
+    }
+    if (isset($values['border_color'])) {
+      $config->set('styles.border_color', $values['border_color']);
+    }
+    if (isset($values['border_width'])) {
+      $config->set('styles.border_width', $values['border_width']);
+    }
+    if (isset($values['box_shadow'])) {
+      $config->set('styles.box_shadow', $values['box_shadow']);
+    }
+    if (isset($values['button_border_radius'])) {
+      $config->set('styles.button_border_radius', $values['button_border_radius']);
     }
     
-    if ($typography) {
-      $config->set('styles.font_family', $typography['font_family']);
+    // Typography settings
+    if (isset($values['font_family'])) {
+      $config->set('styles.font_family', $values['font_family']);
     }
     
     $config->save();
