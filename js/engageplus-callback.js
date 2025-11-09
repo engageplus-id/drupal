@@ -84,29 +84,42 @@
   function handleAuthSuccess(result) {
     console.log('EngagePlus: Callback received result', result);
     
-    // Extract tokens from result object
-    // The widget returns {tokens: {accessToken, refreshToken}, user: {...}, provider: '...'}
+    // Extract tokens and user data from result object
+    // The widget returns {tokens: {access_token, id_token, refresh_token}, user: {...}, provider: '...'}
     var tokens = result.tokens || result;
-    var accessToken = tokens.accessToken || tokens.access_token;
-    var refreshToken = tokens.refreshToken || tokens.refresh_token || null;
+    var accessToken = tokens.access_token || tokens.accessToken;
+    var idToken = tokens.id_token || tokens.idToken;
+    var refreshToken = tokens.refresh_token || tokens.refreshToken || null;
+    var userData = result.user || null;
 
-    if (!accessToken) {
-      console.error('EngagePlus: No access token found in callback result', result);
-      showError('Missing access token in authentication response');
+    if (!idToken) {
+      console.error('EngagePlus: No ID token found in callback result', result);
+      showError('Missing ID token in authentication response');
       return;
     }
 
-    console.log('EngagePlus: Sending tokens to Drupal backend');
+    if (!userData || !userData.email) {
+      console.error('EngagePlus: No user data found in callback result', result);
+      showError('Missing user data in authentication response');
+      return;
+    }
+
+    if (debugMode) {
+      console.log('EngagePlus: Sending tokens and user data to Drupal backend');
+    }
     
-    // Send tokens to Drupal backend
+    // Send tokens and user data to Drupal backend
     fetch('/engageplus/api/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        idToken: idToken,
         accessToken: accessToken,
         refreshToken: refreshToken,
+        user: userData,
+        provider: result.provider || 'unknown',
       }),
     })
     .then(function (response) {

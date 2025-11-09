@@ -12,10 +12,19 @@
   Drupal.behaviors.engagePlusWidget = {
     attach: function (context, settings) {
       const widgetSettings = settings.engageplus || {};
+      const debugMode = widgetSettings.debugMode || false;
+      
+      // Don't initialize the widget on the callback page - let callback.js handle it
+      if (widgetSettings.callback) {
+        if (debugMode) {
+          console.log('EngagePlus: Skipping main widget initialization on callback page');
+        }
+        return;
+      }
+      
       const widgets = widgetSettings.widgets || {};
       const callbackUrl = widgetSettings.callbackUrl || '/engageplus/auth/callback';
       const userInfoUrl = widgetSettings.userInfoUrl || '/engageplus/api/user';
-      const debugMode = widgetSettings.debugMode || false;
 
       // Load the EngagePlus widget script if not already loaded.
       if (typeof window.EngagePlus === 'undefined') {
@@ -80,30 +89,40 @@
           console.log('EngagePlus: Token structure:', JSON.stringify(result, null, 2));
         }
 
-        // Extract tokens from result object
-        // The widget returns {tokens: {accessToken, refreshToken}, user: {...}, provider: '...'}
+        // Extract tokens and user data from result object
+        // The widget returns {tokens: {access_token, id_token, refresh_token}, user: {...}, provider: '...'}
         var tokens = result.tokens || result;
-        var accessToken = tokens.accessToken || tokens.access_token;
-        var refreshToken = tokens.refreshToken || tokens.refresh_token || null;
+        var accessToken = tokens.access_token || tokens.accessToken;
+        var idToken = tokens.id_token || tokens.idToken;
+        var refreshToken = tokens.refresh_token || tokens.refreshToken || null;
+        var userData = result.user || null;
 
-        if (!accessToken) {
-          console.error('EngagePlus: No access token found in result', result);
-          throw new Error('Missing access token');
+        if (!idToken) {
+          console.error('EngagePlus: No ID token found in result', result);
+          throw new Error('Missing ID token');
+        }
+
+        if (!userData || !userData.email) {
+          console.error('EngagePlus: No user data found in result', result);
+          throw new Error('Missing user data');
         }
 
         if (debugMode) {
-          console.log('EngagePlus: Sending token to Drupal backend');
+          console.log('EngagePlus: Sending tokens and user data to Drupal backend');
         }
 
-        // Send user data to Drupal backend to create/login user.
+        // Send tokens and user data to Drupal backend to create/login user.
         fetch(userInfoUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            idToken: idToken,
             accessToken: accessToken,
             refreshToken: refreshToken,
+            user: userData,
+            provider: result.provider || 'unknown',
           }),
         })
           .then(function (response) {

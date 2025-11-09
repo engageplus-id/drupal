@@ -125,22 +125,17 @@ class EngagePlusController extends ControllerBase {
       ], 400);
     }
 
-    // Validate access token is present.
-    if (empty($data['accessToken'])) {
+    // Validate user data is present.
+    if (empty($data['user']) || empty($data['user']['email'])) {
       return new JsonResponse([
         'success' => FALSE,
-        'error' => 'Missing access token',
+        'error' => 'Missing user data or email',
       ], 400);
     }
 
     try {
-      // Decode the JWT token to get user information.
-      $user_data = $this->decodeJwtToken($data['accessToken']);
+      $user_data = $data['user'];
       
-      if (!$user_data || empty($user_data['email'])) {
-        throw new \Exception('Invalid token or missing email');
-      }
-
       // Debug logging if enabled.
       if ($config->get('debug_mode')) {
         $this->logger->info('EngagePlus user data received: @data', [
@@ -271,12 +266,13 @@ class EngagePlusController extends ControllerBase {
    */
   protected function createNewUser(array $user_data, $config) {
     $email = $user_data['email'];
-    $name = $user_data['name'] ?? $user_data['email'];
+    // The widget provides 'name' field from OAuth provider
+    $display_name = $user_data['name'] ?? $user_data['given_name'] ?? $user_data['email'];
     
     // Generate username based on pattern.
     $username_pattern = $config->get('username_pattern') ?: '[email]';
     $username = str_replace('[email]', $email, $username_pattern);
-    $username = str_replace('[name]', $name, $username);
+    $username = str_replace('[name]', $display_name, $username);
     
     // Ensure username is unique.
     $username = $this->generateUniqueUsername($username);
