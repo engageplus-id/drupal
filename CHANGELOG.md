@@ -49,6 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Widget configuration now uses correct `issuer` parameter (was incorrectly using `baseUrl`)
 - Widget configuration now includes `redirectUri` parameter to ensure proper OAuth callback
 - Callback page now properly loads and initializes widget.js to process OAuth tokens
+- Callback handler now uses correct clientId from Drupal configuration (not placeholder)
+- Callback handler now correctly extracts tokens from widget response object structure
+- Fixed token extraction to handle both `{tokens: {...}}` and direct token object formats
+- Widget JavaScript now properly extracts accessToken from nested result structure
 - Callback handler now sends tokens to Drupal backend for user authentication
 - Fallback logic ensures api_base_url always has a value for upgraded installations
 

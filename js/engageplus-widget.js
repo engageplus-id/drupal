@@ -74,9 +74,25 @@
       /**
        * Handle successful authentication.
        */
-      function handleAuthSuccess(tokens, config) {
+      function handleAuthSuccess(result, config) {
         if (debugMode) {
-          console.log('EngagePlus: Authentication successful', tokens);
+          console.log('EngagePlus: Authentication successful', result);
+          console.log('EngagePlus: Token structure:', JSON.stringify(result, null, 2));
+        }
+
+        // Extract tokens from result object
+        // The widget returns {tokens: {accessToken, refreshToken}, user: {...}, provider: '...'}
+        var tokens = result.tokens || result;
+        var accessToken = tokens.accessToken || tokens.access_token;
+        var refreshToken = tokens.refreshToken || tokens.refresh_token || null;
+
+        if (!accessToken) {
+          console.error('EngagePlus: No access token found in result', result);
+          throw new Error('Missing access token');
+        }
+
+        if (debugMode) {
+          console.log('EngagePlus: Sending token to Drupal backend');
         }
 
         // Send user data to Drupal backend to create/login user.
@@ -86,8 +102,8 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken || null,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
           }),
         })
           .then(function (response) {

@@ -17,4 +17,6 @@ callback:
   css:
     theme:
       css/engageplus.css: {}
+  dependencies:
+    - core/drupalSettings
 

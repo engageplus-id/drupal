@@ -3,13 +3,27 @@
  * Handles the EngagePlus authentication callback page.
  */
 
-(function () {
+(function (drupalSettings) {
   'use strict';
 
   // This page is loaded after OAuth redirect from EngagePlus.
   // The EngagePlus widget.js needs to be loaded to process the callback.
   
   console.log('EngagePlus: Callback page loaded');
+
+  // Get configuration from Drupal settings
+  var callbackSettings = drupalSettings.engageplus && drupalSettings.engageplus.callback;
+  if (!callbackSettings || !callbackSettings.clientId) {
+    console.error('EngagePlus: Missing callback configuration');
+    showError('Configuration error: missing client ID');
+    return;
+  }
+
+  var debugMode = callbackSettings.debugMode || false;
+
+  if (debugMode) {
+    console.log('EngagePlus: Callback configuration', callbackSettings);
+  }
 
   // Check if the widget script is already loaded
   if (typeof window.EngagePlus === 'undefined') {
@@ -36,13 +50,22 @@
    */
   function initializeCallback() {
     // The widget will automatically detect callback mode and process the tokens
-    // We just need to initialize it with a minimal config
     try {
+      if (debugMode) {
+        console.log('EngagePlus: Initializing callback with config', {
+          clientId: callbackSettings.clientId,
+          issuer: callbackSettings.issuer,
+          redirectUri: callbackSettings.redirectUri
+        });
+      }
+
       window.EngagePlus.init({
-        clientId: 'callback-handler', // Placeholder - not used in callback mode
-        onSuccess: function(tokens) {
-          console.log('EngagePlus: Callback successful, processing tokens');
-          handleAuthSuccess(tokens);
+        clientId: callbackSettings.clientId,
+        issuer: callbackSettings.issuer,
+        redirectUri: callbackSettings.redirectUri,
+        onSuccess: function(result) {
+          console.log('EngagePlus: Callback successful, processing result');
+          handleAuthSuccess(result);
         },
         onError: function(error) {
           console.error('EngagePlus: Callback error', error);
@@ -58,7 +81,21 @@
   /**
    * Handle successful authentication from callback
    */
-  function handleAuthSuccess(tokens) {
+  function handleAuthSuccess(result) {
+    console.log('EngagePlus: Callback received result', result);
+    
+    // Extract tokens from result object
+    // The widget returns {tokens: {accessToken, refreshToken}, user: {...}, provider: '...'}
+    var tokens = result.tokens || result;
+    var accessToken = tokens.accessToken || tokens.access_token;
+    var refreshToken = tokens.refreshToken || tokens.refresh_token || null;
+
+    if (!accessToken) {
+      console.error('EngagePlus: No access token found in callback result', result);
+      showError('Missing access token in authentication response');
+      return;
+    }
+
     console.log('EngagePlus: Sending tokens to Drupal backend');
     
     // Send tokens to Drupal backend
@@ -68,8 +105,8 @@
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken || null,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       }),
     })
     .then(function (response) {
@@ -123,5 +160,5 @@
     }
   }
 
-})();
+})(drupalSettings);
 

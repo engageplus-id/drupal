@@ -76,6 +76,11 @@ class EngagePlusController extends ControllerBase {
    * This is the page where the widget JavaScript will send the user data.
    */
   public function authCallback(Request $request) {
+    $config = $this->configFactory->get('engageplus.settings');
+    $client_id = $config->get('client_id');
+    $api_base_url = $config->get('api_base_url') ?: 'https://engageplus.id';
+    $callback_url = $GLOBALS['base_url'] . '/engageplus/auth/callback';
+    
     // This page serves as the redirect target.
     // The actual authentication is handled by JavaScript in the widget.
     return [
@@ -84,6 +89,16 @@ class EngagePlusController extends ControllerBase {
         '</div>',
       '#attached' => [
         'library' => ['engageplus/callback'],
+        'drupalSettings' => [
+          'engageplus' => [
+            'callback' => [
+              'clientId' => $client_id,
+              'issuer' => $api_base_url,
+              'redirectUri' => $callback_url,
+              'debugMode' => $config->get('debug_mode') ?? FALSE,
+            ],
+          ],
+        ],
       ],
     ];
   }
