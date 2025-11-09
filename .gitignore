@@ -1,0 +1,39 @@
+# Drupal module specific
+vendor/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.buildpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node.js (if used for build tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build artifacts
+*.min.js
+*.min.css
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.cache
+

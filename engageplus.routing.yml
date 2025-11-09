@@ -1,0 +1,24 @@
+engageplus.admin_settings:
+  path: '/admin/config/people/engageplus'
+  defaults:
+    _form: '\Drupal\engageplus\Form\EngagePlusConfigForm'
+    _title: 'EngagePlus Settings'
+  requirements:
+    _permission: 'administer engageplus'
+
+engageplus.auth_callback:
+  path: '/engageplus/auth/callback'
+  defaults:
+    _controller: '\Drupal\engageplus\Controller\EngagePlusController::authCallback'
+    _title: 'EngagePlus Authentication'
+  requirements:
+    _access: 'TRUE'
+
+engageplus.user_info:
+  path: '/engageplus/api/user'
+  defaults:
+    _controller: '\Drupal\engageplus\Controller\EngagePlusController::getUserInfo'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+

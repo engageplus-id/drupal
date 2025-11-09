@@ -1,0 +1,11 @@
+name: 'EngagePlus'
+description: 'Lightweight OAuth authentication widget that syncs users to your Drupal database. Supports Google, GitHub, Microsoft, LinkedIn and custom OIDC providers.'
+type: module
+core_version_requirement: ^9 || ^10 || ^11
+package: 'Authentication'
+configure: engageplus.admin_settings
+
+dependencies:
+  - drupal:user
+  - drupal:block
+

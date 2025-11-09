@@ -1,0 +1,197 @@
+INSTALLATION INSTRUCTIONS
+=========================
+
+EngagePlus for Drupal - Lightweight OAuth Authentication Widget
+
+
+REQUIREMENTS
+------------
+
+* Drupal 9.x, 10.x, or 11.x
+* PHP 7.4 or higher
+* HTTPS-enabled website (required for OAuth)
+* EngagePlus account (free trial at https://engageplus.id)
+
+
+INSTALLATION
+------------
+
+Method 1: Using Composer (Recommended)
+---------------------------------------
+
+1. Run the following command in your Drupal root directory:
+
+   composer require drupal/engageplus
+
+2. Enable the module:
+
+   drush en engageplus
+
+   Or via the admin interface at /admin/modules
+
+
+Method 2: Manual Installation
+------------------------------
+
+1. Download the module from Drupal.org or GitHub
+
+2. Extract the archive to your modules directory:
+
+   /modules/contrib/engageplus
+
+3. Enable the module via Drush:
+
+   drush en engageplus
+
+   Or via the admin interface at /admin/modules
+
+
+CONFIGURATION
+-------------
+
+Step 1: Create EngagePlus Account
+----------------------------------
+
+1. Visit https://engageplus.id and create an account
+2. Configure your OAuth providers (Google, GitHub, Microsoft, LinkedIn)
+3. Customize your widget appearance in the dashboard
+4. Copy your Client ID (found in the dashboard)
+
+
+Step 2: Configure Module Settings
+----------------------------------
+
+1. Navigate to: Configuration > People > EngagePlus Settings
+   URL: /admin/config/people/engageplus
+
+2. Enter your Client ID from step 1
+
+3. Configure user creation settings:
+   - Enable "Automatically create users"
+   - Select default role for new users
+   - Choose username pattern: [email] or [name]
+   - Enable "Skip email verification" (recommended)
+
+4. Customize widget appearance (optional):
+   - Set custom button text
+   - Choose theme (light/dark)
+   - Toggle provider labels
+
+5. Click "Save configuration"
+
+
+Step 3: Place Widget Block
+---------------------------
+
+1. Navigate to: Structure > Block Layout
+   URL: /admin/structure/block
+
+2. Choose a region (e.g., Sidebar, Header, Content)
+
+3. Click "Place block"
+
+4. Find "EngagePlus Widget" and click "Place block"
+
+5. Configure block:
+   - Set Container ID (must be unique)
+   - Customize appearance (optional)
+   - Configure visibility (optional)
+   - Set "Hide for authenticated users" if desired
+
+6. Save block
+
+
+Step 4: Configure Redirect URIs
+--------------------------------
+
+1. Return to your EngagePlus dashboard
+
+2. Navigate to Settings or OAuth Configuration
+
+3. Add the following redirect URI:
+
+   https://yoursite.com/engageplus/auth/callback
+
+   Replace "yoursite.com" with your actual domain
+
+4. Save changes
+
+
+VERIFICATION
+------------
+
+1. Visit your site where the widget is placed
+
+2. Click the widget to test OAuth login
+
+3. Choose an OAuth provider (Google, GitHub, etc.)
+
+4. Complete authentication
+
+5. Verify you're logged into Drupal
+
+6. Check user was created at: People (/admin/people)
+
+
+TROUBLESHOOTING
+---------------
+
+Widget not appearing?
+- Verify Client ID is entered in settings
+- Clear Drupal cache: drush cr
+- Check block is enabled and in visible region
+
+Authentication fails?
+- Verify redirect URI matches in EngagePlus dashboard
+- Check browser console for JavaScript errors
+- Enable debug mode in module settings
+- Check Drupal logs: /admin/reports/dblog
+
+Users not created?
+- Verify "Automatically create users" is enabled
+- Check that user with that email doesn't already exist
+- Review Drupal logs for error messages
+
+
+UNINSTALLATION
+--------------
+
+1. Remove all EngagePlus widget blocks from block layout
+
+2. Disable the module:
+
+   drush pmu engageplus
+
+   Or via admin interface at /admin/modules
+
+3. (Optional) Remove user accounts created via EngagePlus
+
+4. (Optional) Delete module files:
+
+   rm -rf modules/contrib/engageplus
+
+
+SUPPORT
+-------
+
+Documentation: https://engageplus.id/docs
+Issue Queue: https://github.com/engageplus/drupal-module/issues
+Email: support@engageplus.id
+
+
+SECURITY
+--------
+
+Always use HTTPS in production. OAuth requires secure connections.
+
+Keep the module updated for security patches.
+
+Review authentication logs regularly at /admin/reports/dblog
+
+
+LICENSE
+-------
+
+This module is licensed under GPL-2.0+
+See LICENSE.txt for details
+

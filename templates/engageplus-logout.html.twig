@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the EngagePlus logout display.
+ *
+ * Available variables:
+ * - username: The current user's display name.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="engageplus-logout-wrapper">
+  <div class="engageplus-logout-message">
+    {{ 'Logged in as @username'|t({'@username': username}) }}
+  </div>
+  <a href="{{ path('user.logout') }}" class="engageplus-logout-button">
+    {{ 'Log out'|t }}
+  </a>
+</div>
+

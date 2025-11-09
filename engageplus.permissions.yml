@@ -1,0 +1,5 @@
+administer engageplus:
+  title: 'Administer EngagePlus'
+  description: 'Configure EngagePlus settings and manage OAuth integration'
+  restrict access: true
+
