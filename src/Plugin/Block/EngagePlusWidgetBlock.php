@@ -226,7 +226,7 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
     $widget_config = [
       'clientId' => $client_id,
       'containerId' => $config['container_id'],
-      'baseUrl' => $api_base_url,
+      'issuer' => $api_base_url,
     ];
 
     // Apply button text (block config overrides global).

@@ -264,7 +264,7 @@ If you're seeing API calls to your local site (e.g., `http://localhost:8090/api/
 
 4. **Enable Debug Mode**: Enable debug mode in EngagePlus settings and check browser console for:
    ```
-   EngagePlus: baseUrl set to: https://engageplus.id
+   EngagePlus: issuer set to: https://engageplus.id
    ```
 
 5. **Re-save Configuration**: If the above doesn't work, re-save the EngagePlus configuration form to ensure the api_base_url is properly saved

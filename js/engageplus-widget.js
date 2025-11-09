@@ -54,7 +54,7 @@
             
             if (debugMode) {
               console.log('EngagePlus: Initializing widget', containerId, config);
-              console.log('EngagePlus: baseUrl set to:', config.baseUrl || 'NOT SET');
+              console.log('EngagePlus: issuer set to:', config.issuer || 'NOT SET (will default to window.location.origin)');
             }
 
             // Initialize the widget with success/error handlers.

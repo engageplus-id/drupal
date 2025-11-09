@@ -40,14 +40,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copyable callback URL field in configuration form with one-click copy button
 - API Base URL configuration setting for custom EngagePlus instances
 - Improved getting started instructions in admin form
+- Database update hook (8101) to set api_base_url for existing installations
+- Enhanced debug logging to show configured issuer URL
+- Comprehensive troubleshooting guide in README
 
 ### Fixed
 - Widget now correctly uses EngagePlus API URL instead of Drupal site URL for API calls
-- Widget configuration now includes `baseUrl` parameter to ensure proper API endpoint resolution
+- Widget configuration now uses correct `issuer` parameter (was incorrectly using `baseUrl`)
+- Fallback logic ensures api_base_url always has a value for upgraded installations
 
 ### Changed
 - Configuration form now displays callback URL prominently with copy functionality
 - API Base URL is now configurable (defaults to https://engageplus.id)
+- Debug logging now shows issuer parameter value
 
 ## [Unreleased]
 
