@@ -45,11 +45,25 @@ class EngagePlusConfigForm extends ConfigFormBase {
         '<li>' . $this->t('Copy your Client ID from the dashboard') . '</li>' .
         '<li>' . $this->t('Paste it below and save') . '</li>' .
         '<li>' . $this->t('Add the EngagePlus widget block to your site') . '</li>' .
-        '<li>' . $this->t('Add <strong>@url</strong> as a redirect URI in your EngagePlus dashboard', [
-          '@url' => $GLOBALS['base_url'] . '/engageplus/auth/callback',
-        ]) . '</li>' .
+        '<li>' . $this->t('Copy your callback URL below and add it as a redirect URI in your EngagePlus dashboard') . '</li>' .
         '</ol>' .
         '</div>',
+    ];
+
+    // Callback URL field with copy functionality.
+    $callback_url = $GLOBALS['base_url'] . '/engageplus/auth/callback';
+    $form['getting_started']['callback_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Callback URL'),
+      '#description' => $this->t('Add this URL as a redirect URI in your EngagePlus dashboard. Click the field to select all and copy.'),
+      '#default_value' => $callback_url,
+      '#attributes' => [
+        'readonly' => 'readonly',
+        'onclick' => 'this.select();',
+        'style' => 'font-family: monospace; background-color: #f5f5f5;',
+      ],
+      '#prefix' => '<div class="callback-url-wrapper">',
+      '#suffix' => '<button type="button" class="button button--small" onclick="navigator.clipboard.writeText(\'' . $callback_url . '\'); this.textContent=\'Copied!\'; setTimeout(() => this.textContent=\'Copy to Clipboard\', 2000);" style="margin-left: 10px;">Copy to Clipboard</button></div>',
     ];
 
     $form['api_settings'] = [
@@ -62,6 +76,14 @@ class EngagePlusConfigForm extends ConfigFormBase {
       '#title' => $this->t('Client ID'),
       '#description' => $this->t('Your EngagePlus Client ID from the dashboard.'),
       '#default_value' => $config->get('client_id'),
+      '#required' => TRUE,
+    ];
+
+    $form['api_settings']['api_base_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('API Base URL'),
+      '#description' => $this->t('The base URL for EngagePlus API. Leave default unless using a custom instance.'),
+      '#default_value' => $config->get('api_base_url') ?: 'https://engageplus.id',
       '#required' => TRUE,
     ];
 
@@ -181,6 +203,11 @@ class EngagePlusConfigForm extends ConfigFormBase {
       $form_state->setErrorByName('client_id', $this->t('Client ID is required.'));
     }
 
+    $api_base_url = $form_state->getValue('api_base_url');
+    if (!filter_var($api_base_url, FILTER_VALIDATE_URL)) {
+      $form_state->setErrorByName('api_base_url', $this->t('API Base URL must be a valid URL.'));
+    }
+
     $widget_url = $form_state->getValue('widget_url');
     if (!filter_var($widget_url, FILTER_VALIDATE_URL)) {
       $form_state->setErrorByName('widget_url', $this->t('Widget URL must be a valid URL.'));
@@ -200,6 +227,7 @@ class EngagePlusConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('engageplus.settings')
       ->set('client_id', $form_state->getValue('client_id'))
+      ->set('api_base_url', $form_state->getValue('api_base_url'))
       ->set('widget_url', $form_state->getValue('widget_url'))
       ->set('button_text', $form_state->getValue('button_text'))
       ->set('theme', $form_state->getValue('theme'))

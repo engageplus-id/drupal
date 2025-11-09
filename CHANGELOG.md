@@ -34,6 +34,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No user data stored by third parties
 - Short-lived access tokens (1 hour expiry)
 
+## [1.0.1] - 2025-11-09
+
+### Added
+- Copyable callback URL field in configuration form with one-click copy button
+- API Base URL configuration setting for custom EngagePlus instances
+- Improved getting started instructions in admin form
+
+### Fixed
+- Widget now correctly uses EngagePlus API URL instead of Drupal site URL for API calls
+- Widget configuration now includes `baseUrl` parameter to ensure proper API endpoint resolution
+
+### Changed
+- Configuration form now displays callback URL prominently with copy functionality
+- API Base URL is now configurable (defaults to https://engageplus.id)
+
 ## [Unreleased]
 
 ### Planned Features

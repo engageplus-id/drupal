@@ -5,6 +5,9 @@ engageplus.settings:
     client_id:
       type: string
       label: 'Client ID'
+    api_base_url:
+      type: string
+      label: 'API Base URL'
     widget_url:
       type: string
       label: 'Widget Script URL'

@@ -217,9 +217,11 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
     }
 
     // Build widget configuration.
+    $api_base_url = $global_config->get('api_base_url') ?: 'https://engageplus.id';
     $widget_config = [
       'clientId' => $client_id,
       'containerId' => $config['container_id'],
+      'baseUrl' => $api_base_url,
     ];
 
     // Apply button text (block config overrides global).

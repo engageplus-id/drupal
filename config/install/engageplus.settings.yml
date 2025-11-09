@@ -1,4 +1,5 @@
 client_id: ''
+api_base_url: 'https://engageplus.id'
 widget_url: 'https://engageplus.id/widget.js'
 button_text: ''
 theme: ''
