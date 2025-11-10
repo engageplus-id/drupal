@@ -250,6 +250,12 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
       $widget_config['showLabels'] = (bool) $config['show_labels'];
     }
 
+    // Apply auth mode setting.
+    $auth_mode = $global_config->get('auth_mode');
+    if (!empty($auth_mode)) {
+      $widget_config['authMode'] = $auth_mode;
+    }
+
     // Apply custom styles from global configuration.
     $styles = [];
     

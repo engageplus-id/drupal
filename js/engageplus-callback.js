@@ -63,9 +63,19 @@
         clientId: callbackSettings.clientId,
         issuer: callbackSettings.issuer,
         redirectUri: callbackSettings.redirectUri,
+        // Support both onSuccess (legacy) and onLogin (preferred)
         onSuccess: function(result) {
           console.log('EngagePlus: Callback successful, processing result');
           handleAuthSuccess(result);
+        },
+        onLogin: function(result) {
+          console.log('EngagePlus: Callback successful via onLogin, processing result');
+          handleAuthSuccess(result);
+        },
+        onLogout: function(user) {
+          if (debugMode) {
+            console.log('EngagePlus: User logged out during callback', user);
+          }
         },
         onError: function(error) {
           console.error('EngagePlus: Callback error', error);

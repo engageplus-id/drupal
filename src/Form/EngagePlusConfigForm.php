@@ -111,6 +111,17 @@ class EngagePlusConfigForm extends ConfigFormBase {
       '#default_value' => $config->get('show_labels') ?? TRUE,
     ];
 
+    $form['widget_settings']['auth_mode'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Authentication Mode'),
+      '#description' => $this->t('Choose how the OAuth flow opens: redirect navigates the current page, popup opens a new window.'),
+      '#options' => [
+        'redirect' => $this->t('Redirect (navigate current page)'),
+        'popup' => $this->t('Popup (open new window)'),
+      ],
+      '#default_value' => $config->get('auth_mode') ?: 'redirect',
+    ];
+
     // Layout & Sizing
     $form['widget_settings']['layout'] = [
       '#type' => 'details',
@@ -349,6 +360,7 @@ class EngagePlusConfigForm extends ConfigFormBase {
       ->set('api_base_url', $form_state->getValue('api_base_url'))
       ->set('widget_url', $form_state->getValue('widget_url'))
       ->set('show_labels', $form_state->getValue('show_labels'))
+      ->set('auth_mode', $form_state->getValue('auth_mode'))
       ->set('auto_create_users', $form_state->getValue('auto_create_users'))
       ->set('default_role', $form_state->getValue('default_role'))
       ->set('username_pattern', $form_state->getValue('username_pattern'))

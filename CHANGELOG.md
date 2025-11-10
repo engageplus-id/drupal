@@ -86,6 +86,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Organized style settings into collapsible sub-sections (Layout, Colors, Borders, Typography)
 - Configuration schema updated to include all style settings
 
+## [1.2.0] - 2025-11-09
+
+### Added
+- Full support for EngagePlus widget callbacks per official documentation
+  * onLogin callback support (in addition to onSuccess)
+  * onLogout callback with automatic page reload
+  * Proper integration of all widget lifecycle events
+- Authentication mode configuration (redirect vs popup)
+- Automatic user state detection on page load using isAuthenticated()
+- Enhanced logout functionality
+  * Calls EngagePlus.logout() to clear widget session/localStorage
+  * Clears all tokens (access_token, id_token, refresh_token)
+  * Then performs Drupal logout
+- Check for existing authenticated sessions on page load
+- Debug logging for authenticated user state
+
+### Changed
+- Logout button now properly calls EngagePlus.logout() before Drupal logout
+- Widget initialization now checks for existing authentication
+- Callback page supports both onSuccess and onLogin callbacks
+
+### Documentation
+- Aligned implementation with https://engageplus.id/docs/widget
+- Added support for all documented widget methods and callbacks
+
 ## [Unreleased]
 
 ### Planned Features

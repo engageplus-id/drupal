@@ -66,16 +66,31 @@
               console.log('EngagePlus: issuer set to:', config.issuer || 'NOT SET (will default to window.location.origin)');
             }
 
-            // Initialize the widget with success/error handlers.
+            // Initialize the widget with all callbacks.
             window.EngagePlus.init({
               ...config,
-              onSuccess: function (tokens) {
-                handleAuthSuccess(tokens, config);
+              // onSuccess is for compatibility, onLogin is the widget's preferred callback
+              onSuccess: function (result) {
+                handleAuthSuccess(result, config);
+              },
+              onLogin: function (result) {
+                handleAuthSuccess(result, config);
+              },
+              onLogout: function (user) {
+                handleAuthLogout(user, config);
               },
               onError: function (error) {
                 handleAuthError(error, config);
               }
             });
+            
+            // Check if user is already authenticated on page load
+            if (window.EngagePlus.isAuthenticated && window.EngagePlus.isAuthenticated()) {
+              if (debugMode) {
+                const user = window.EngagePlus.getUser();
+                console.log('EngagePlus: User already authenticated:', user);
+              }
+            }
           });
         });
       }
@@ -167,6 +182,23 @@
       function handleAuthError(error, config) {
         console.error('EngagePlus: Authentication error', error);
         showMessage('Authentication failed: ' + (error.message || 'Unknown error'), 'error');
+      }
+
+      /**
+       * Handle user logout.
+       */
+      function handleAuthLogout(user, config) {
+        if (debugMode) {
+          console.log('EngagePlus: User logged out', user);
+        }
+
+        // Clear any Drupal-side session data
+        // The EngagePlus.logout() method has already cleared widget session/localStorage
+        
+        // Optionally reload the page to show logged-out state
+        setTimeout(function () {
+          window.location.reload();
+        }, 500);
       }
 
       /**

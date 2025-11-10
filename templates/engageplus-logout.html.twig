@@ -13,8 +13,27 @@
   <div class="engageplus-logout-message">
     {{ 'Logged in as @username'|t({'@username': username}) }}
   </div>
-  <a href="{{ path('user.logout') }}" class="engageplus-logout-button">
+  <button type="button" class="engageplus-logout-button" id="engageplus-logout-btn">
     {{ 'Log out'|t }}
-  </a>
+  </button>
 </div>
+
+<script>
+(function() {
+  'use strict';
+  
+  var logoutBtn = document.getElementById('engageplus-logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function() {
+      // First, call EngagePlus logout to clear widget session
+      if (typeof window.EngagePlus !== 'undefined') {
+        window.EngagePlus.logout();
+      }
+      
+      // Then redirect to Drupal logout
+      window.location.href = '{{ path('user.logout') }}';
+    });
+  }
+})();
+</script>
 

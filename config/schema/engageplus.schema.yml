@@ -14,6 +14,9 @@ engageplus.settings:
     show_labels:
       type: boolean
       label: 'Show provider labels'
+    auth_mode:
+      type: string
+      label: 'Authentication mode'
     auto_create_users:
       type: boolean
       label: 'Automatically create users'
