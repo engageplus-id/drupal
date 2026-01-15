@@ -1,0 +1,33 @@
+{
+  "name": "drupal/engageplus",
+  "description": "Lightweight OAuth authentication widget that syncs users directly to your Drupal database. Supports Google, GitHub, Microsoft, LinkedIn and custom OIDC providers.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "drupal",
+    "authentication",
+    "oauth",
+    "login",
+    "social",
+    "google",
+    "github",
+    "microsoft",
+    "linkedin"
+  ],
+  "homepage": "https://engageplus.id",
+  "support": {
+    "issues": "https://github.com/engageplus/drupal-module/issues",
+    "source": "https://github.com/engageplus/drupal-module",
+    "docs": "https://engageplus.id/docs"
+  },
+  "require": {
+    "php": ">=7.4",
+    "drupal/core": "^9 || ^10 || ^11"
+  },
+  "require-dev": {
+    "drupal/core-dev": "^9 || ^10 || ^11"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
+

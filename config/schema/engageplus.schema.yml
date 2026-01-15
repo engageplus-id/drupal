@@ -1,0 +1,106 @@
+engageplus.settings:
+  type: config_object
+  label: 'EngagePlus settings'
+  mapping:
+    client_id:
+      type: string
+      label: 'Client ID'
+    api_base_url:
+      type: string
+      label: 'API Base URL'
+    widget_url:
+      type: string
+      label: 'Widget Script URL'
+    show_labels:
+      type: boolean
+      label: 'Show provider labels'
+    auth_mode:
+      type: string
+      label: 'Authentication mode'
+    auto_create_users:
+      type: boolean
+      label: 'Automatically create users'
+    default_role:
+      type: string
+      label: 'Default role'
+    username_pattern:
+      type: string
+      label: 'Username pattern'
+    email_verification:
+      type: boolean
+      label: 'Skip email verification'
+    debug_mode:
+      type: boolean
+      label: 'Enable debug mode'
+    redirect_after_login:
+      type: string
+      label: 'Redirect after login'
+    styles.width:
+      type: string
+      label: 'Widget width'
+    styles.max_width:
+      type: string
+      label: 'Widget max width'
+    styles.padding:
+      type: string
+      label: 'Widget padding'
+    styles.background_color:
+      type: string
+      label: 'Background color'
+    styles.primary_color:
+      type: string
+      label: 'Primary color'
+    styles.text_color:
+      type: string
+      label: 'Text color'
+    styles.secondary_text_color:
+      type: string
+      label: 'Secondary text color'
+    styles.button_hover_color:
+      type: string
+      label: 'Button hover color'
+    styles.border_radius:
+      type: string
+      label: 'Border radius'
+    styles.border_color:
+      type: string
+      label: 'Border color'
+    styles.border_width:
+      type: string
+      label: 'Border width'
+    styles.box_shadow:
+      type: string
+      label: 'Box shadow'
+    styles.button_border_radius:
+      type: string
+      label: 'Button border radius'
+    styles.font_family:
+      type: string
+      label: 'Font family'
+
+block.settings.engageplus_widget_block:
+  type: block_settings
+  label: 'EngagePlus Widget block'
+  mapping:
+    container_id:
+      type: string
+      label: 'Container ID'
+    button_text:
+      type: string
+      label: 'Button Text'
+    theme:
+      type: string
+      label: 'Theme'
+    show_labels:
+      type: boolean
+      label: 'Show provider labels'
+    hide_for_authenticated:
+      type: boolean
+      label: 'Hide for authenticated users'
+    show_logout_button:
+      type: boolean
+      label: 'Show logout button for authenticated users'
+    custom_css_class:
+      type: string
+      label: 'Custom CSS Class'
+

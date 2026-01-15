@@ -1,0 +1,13 @@
+client_id: ''
+api_base_url: 'https://engageplus.id'
+widget_url: 'https://engageplus.id/widget.js'
+button_text: ''
+theme: ''
+show_labels: true
+auto_create_users: true
+default_role: 'authenticated'
+username_pattern: '[email]'
+email_verification: true
+debug_mode: false
+redirect_after_login: ''
+

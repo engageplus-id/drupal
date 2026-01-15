@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the EngagePlus logout display.
+ *
+ * Available variables:
+ * - username: The current user's display name.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="engageplus-logout-wrapper">
+  <div class="engageplus-logout-message">
+    {{ 'Logged in as @username'|t({'@username': username}) }}
+  </div>
+  <button type="button" class="engageplus-logout-button" id="engageplus-logout-btn">
+    {{ 'Log out'|t }}
+  </button>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  
+  var logoutBtn = document.getElementById('engageplus-logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function() {
+      // First, call EngagePlus logout to clear widget session
+      if (typeof window.EngagePlus !== 'undefined') {
+        window.EngagePlus.logout();
+      }
+      
+      // Then redirect to Drupal logout
+      window.location.href = '{{ path('user.logout') }}';
+    });
+  }
+})();
+</script>
+

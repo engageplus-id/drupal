@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the EngagePlus widget.
+ *
+ * Available variables:
+ * - container_id: The unique container ID for the widget.
+ * - client_id: The EngagePlus client ID.
+ * - config: Widget configuration array.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="engageplus-widget-container {{ config.customCssClass|default('') }}">
+  <div class="engageplus-widget-wrapper">
+    <div id="{{ container_id }}"></div>
+  </div>
+</div>
+

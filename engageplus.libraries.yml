@@ -1,0 +1,22 @@
+widget:
+  version: 1.0
+  js:
+    js/engageplus-widget.js: {}
+  css:
+    theme:
+      css/engageplus.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+
+callback:
+  version: 1.0
+  js:
+    js/engageplus-callback.js: {}
+  css:
+    theme:
+      css/engageplus.css: {}
+  dependencies:
+    - core/drupalSettings
+

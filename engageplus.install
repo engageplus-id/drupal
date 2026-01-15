@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EngagePlus module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function engageplus_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $config = \Drupal::config('engageplus.settings');
+    $client_id = $config->get('client_id');
+
+    if (empty($client_id)) {
+      $requirements['engageplus_client_id'] = [
+        'title' => t('EngagePlus Configuration'),
+        'value' => t('Not configured'),
+        'description' => t('EngagePlus requires a Client ID. Please <a href="@url">configure your Client ID</a>.', [
+          '@url' => '/admin/config/people/engageplus',
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+    else {
+      $requirements['engageplus_client_id'] = [
+        'title' => t('EngagePlus Configuration'),
+        'value' => t('Configured'),
+        'severity' => REQUIREMENT_OK,
+      ];
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function engageplus_install() {
+  \Drupal::messenger()->addStatus(t('EngagePlus has been installed. Please <a href="@url">configure your settings</a> to get started.', [
+    '@url' => '/admin/config/people/engageplus',
+  ]));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function engageplus_uninstall() {
+  // Clean up any leftover configuration.
+  \Drupal::configFactory()->getEditable('engageplus.settings')->delete();
+}
+
+/**
+ * Add api_base_url configuration for existing installations.
+ */
+function engageplus_update_8101() {
+  $config = \Drupal::configFactory()->getEditable('engageplus.settings');
+  
+  // Only set if not already set.
+  if (empty($config->get('api_base_url'))) {
+    $config->set('api_base_url', 'https://engageplus.id');
+    $config->save();
+    
+    return t('Added API Base URL configuration with default value.');
+  }
+  
+  return t('API Base URL already configured.');
+}
+
