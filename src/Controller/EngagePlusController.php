@@ -77,8 +77,7 @@ class EngagePlusController extends ControllerBase {
    */
   public function authCallback(Request $request) {
     $config = $this->configFactory->get('engageplus.settings');
-    $client_id = $config->get('client_id');
-    $api_base_url = $config->get('api_base_url') ?: 'https://engageplus.id';
+    $org_id = $config->get('org_id') ?: $config->get('client_id'); // Backwards compatibility
     $callback_url = $GLOBALS['base_url'] . '/engageplus/auth/callback';
     
     // This page serves as the redirect target.
@@ -92,9 +91,9 @@ class EngagePlusController extends ControllerBase {
         'drupalSettings' => [
           'engageplus' => [
             'callback' => [
-              'clientId' => $client_id,
-              'issuer' => $api_base_url,
+              'orgId' => $org_id,
               'redirectUri' => $callback_url,
+              'widgetUrl' => $config->get('widget_url') ?: 'https://auth.engageplus.id/public/pkce.js',
               'debugMode' => $config->get('debug_mode') ?? FALSE,
             ],
           ],

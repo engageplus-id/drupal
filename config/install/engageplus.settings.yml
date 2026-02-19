@@ -1,9 +1,5 @@
-client_id: ''
-api_base_url: 'https://engageplus.id'
-widget_url: 'https://engageplus.id/widget.js'
-button_text: ''
-theme: ''
-show_labels: true
+org_id: ''
+widget_url: 'https://auth.engageplus.id/public/pkce.js'
 auto_create_users: true
 default_role: 'authenticated'
 username_pattern: '[email]'

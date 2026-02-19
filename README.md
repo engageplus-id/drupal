@@ -9,7 +9,8 @@ Lightweight OAuth authentication widget that syncs users directly to your Drupal
 - **Multiple OAuth Providers**: Google, GitHub, Microsoft, LinkedIn, and custom OIDC providers
 - **Automatic User Creation**: Create Drupal accounts automatically on first login
 - **Flexible Block Placement**: Place the widget anywhere on your site using Drupal's block system
-- **Customizable Appearance**: Control widget theme, button text, and styling
+- **Dashboard-Managed Styling**: Customize widget appearance centrally in EngagePlus dashboard
+- **PKCE Security Flow**: Uses modern OAuth 2.0 PKCE for enhanced security
 - **No Vendor Lock-in**: Minimal dependencies, maximum control
 
 ## Why EngagePlus vs Auth0/Clerk/Firebase?

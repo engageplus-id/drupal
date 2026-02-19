@@ -201,13 +201,13 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
       return [];
     }
 
-    // Don't render if client ID is not configured.
-    $client_id = $global_config->get('client_id');
-    if (empty($client_id)) {
+    // Don't render if org ID is not configured.
+    $org_id = $global_config->get('org_id') ?: $global_config->get('client_id'); // Backwards compatibility
+    if (empty($org_id)) {
       if ($this->currentUser->hasPermission('administer engageplus')) {
         return [
           '#markup' => '<div class="messages messages--warning">' .
-            $this->t('EngagePlus is not configured. Please <a href="@url">configure your Client ID</a>.', [
+            $this->t('EngagePlus is not configured. Please <a href="@url">configure your Organization ID</a>.', [
               '@url' => '/admin/config/people/engageplus',
             ]) .
             '</div>',
@@ -216,20 +216,12 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
       return [];
     }
 
-    // Build widget configuration.
-    // Ensure api_base_url always has a value, even for upgraded installations.
-    $api_base_url = $global_config->get('api_base_url');
-    if (empty($api_base_url)) {
-      $api_base_url = 'https://engageplus.id';
-    }
-    
     // Get the full callback URL.
     $callback_url = $GLOBALS['base_url'] . '/engageplus/auth/callback';
     
+    // Build widget configuration.
     $widget_config = [
-      'clientId' => $client_id,
-      'containerId' => $config['container_id'],
-      'issuer' => $api_base_url,
+      'orgId' => $org_id,
       'redirectUri' => $callback_url,
     ];
 
@@ -245,43 +237,6 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
       $widget_config['theme'] = $theme;
     }
 
-    // Apply show_labels setting.
-    if (isset($config['show_labels'])) {
-      $widget_config['showLabels'] = (bool) $config['show_labels'];
-    }
-
-    // Apply auth mode setting.
-    $auth_mode = $global_config->get('auth_mode');
-    if (!empty($auth_mode)) {
-      $widget_config['authMode'] = $auth_mode;
-    }
-
-    // Apply custom styles from global configuration.
-    $styles = [];
-    
-    // Get all style settings from config.
-    $style_keys = [
-      'width', 'max_width', 'padding',
-      'background_color', 'primary_color', 'text_color', 
-      'secondary_text_color', 'button_hover_color',
-      'border_radius', 'border_color', 'border_width', 
-      'box_shadow', 'button_border_radius',
-      'font_family',
-    ];
-    
-    foreach ($style_keys as $key) {
-      $value = $global_config->get('styles.' . $key);
-      if (!empty($value)) {
-        // Convert snake_case to camelCase for JavaScript
-        $js_key = lcfirst(str_replace('_', '', ucwords($key, '_')));
-        $styles[$js_key] = $value;
-      }
-    }
-    
-    if (!empty($styles)) {
-      $widget_config['styles'] = $styles;
-    }
-
     // Add custom CSS class.
     $css_classes = ['engageplus-widget-container'];
     if (!empty($config['custom_css_class'])) {
@@ -291,7 +246,7 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
     $build = [
       '#theme' => 'engageplus_widget',
       '#container_id' => $config['container_id'],
-      '#client_id' => $client_id,
+      '#org_id' => $org_id,
       '#config' => $widget_config,
       '#attached' => [
         'library' => [
@@ -302,8 +257,8 @@ class EngagePlusWidgetBlock extends BlockBase implements ContainerFactoryPluginI
             'widgets' => [
               $config['container_id'] => $widget_config,
             ],
-            'callbackUrl' => '/engageplus/auth/callback',
             'userInfoUrl' => '/engageplus/api/user',
+            'widgetUrl' => $global_config->get('widget_url') ?: 'https://auth.engageplus.id/public/pkce.js',
             'debugMode' => $global_config->get('debug_mode') ?? FALSE,
           ],
         ],

@@ -1,6 +1,7 @@
 /**
  * @file
  * EngagePlus widget initialization and handling.
+ * New API using OPWidget class from https://auth.engageplus.id/public/pkce.js
  */
 
 (function (Drupal, drupalSettings, once) {
@@ -23,19 +24,22 @@
       }
       
       const widgets = widgetSettings.widgets || {};
-      const callbackUrl = widgetSettings.callbackUrl || '/engageplus/auth/callback';
       const userInfoUrl = widgetSettings.userInfoUrl || '/engageplus/api/user';
 
       // Load the EngagePlus widget script if not already loaded.
-      if (typeof window.EngagePlus === 'undefined') {
+      if (typeof window.OPWidget === 'undefined') {
+        const widgetUrl = widgetSettings.widgetUrl || 'https://auth.engageplus.id/public/pkce.js';
         const script = document.createElement('script');
-        script.src = 'https://engageplus.id/widget.js';
+        script.src = widgetUrl;
         script.async = true;
         script.onload = function () {
+          if (debugMode) {
+            console.log('EngagePlus: Widget script loaded');
+          }
           initializeWidgets();
         };
         script.onerror = function () {
-          console.error('EngagePlus: Failed to load widget script');
+          console.error('EngagePlus: Failed to load widget script from', widgetUrl);
         };
         document.head.appendChild(script);
       } else {
@@ -63,33 +67,30 @@
             
             if (debugMode) {
               console.log('EngagePlus: Initializing widget', containerId, config);
-              console.log('EngagePlus: issuer set to:', config.issuer || 'NOT SET (will default to window.location.origin)');
             }
 
-            // Initialize the widget with all callbacks.
-            window.EngagePlus.init({
-              ...config,
-              // onSuccess is for compatibility, onLogin is the widget's preferred callback
-              onSuccess: function (result) {
-                handleAuthSuccess(result, config);
-              },
-              onLogin: function (result) {
-                handleAuthSuccess(result, config);
-              },
-              onLogout: function (user) {
-                handleAuthLogout(user, config);
-              },
-              onError: function (error) {
-                handleAuthError(error, config);
-              }
-            });
-            
-            // Check if user is already authenticated on page load
-            if (window.EngagePlus.isAuthenticated && window.EngagePlus.isAuthenticated()) {
+            try {
+              // Create new OPWidget instance with the new API
+              const widget = new window.OPWidget({
+                orgId: config.orgId,
+                redirectUri: config.redirectUri,
+                onSuccess: function (tokens) {
+                  handleAuthSuccess(tokens, config);
+                },
+                onError: function (error) {
+                  handleAuthError(error, config);
+                }
+              });
+
+              // Mount the widget to the container
+              widget.mount('#' + containerId);
+
               if (debugMode) {
-                const user = window.EngagePlus.getUser();
-                console.log('EngagePlus: User already authenticated:', user);
+                console.log('EngagePlus: Widget mounted successfully');
               }
+            } catch (error) {
+              console.error('EngagePlus: Failed to initialize widget', error);
+              showMessage('Failed to initialize authentication widget', 'error');
             }
           });
         });
@@ -98,28 +99,27 @@
       /**
        * Handle successful authentication.
        */
-      function handleAuthSuccess(result, config) {
+      function handleAuthSuccess(tokens, config) {
         if (debugMode) {
-          console.log('EngagePlus: Authentication successful', result);
-          console.log('EngagePlus: Token structure:', JSON.stringify(result, null, 2));
+          console.log('EngagePlus: Authentication successful', tokens);
         }
 
-        // Extract tokens and user data from result object
-        // The widget returns {tokens: {access_token, id_token, refresh_token}, user: {...}, provider: '...'}
-        var tokens = result.tokens || result;
+        // Extract tokens and user data from result
         var accessToken = tokens.access_token || tokens.accessToken;
         var idToken = tokens.id_token || tokens.idToken;
         var refreshToken = tokens.refresh_token || tokens.refreshToken || null;
-        var userData = result.user || null;
+        var userData = tokens.user || null;
 
         if (!idToken) {
-          console.error('EngagePlus: No ID token found in result', result);
-          throw new Error('Missing ID token');
+          console.error('EngagePlus: No ID token found in result', tokens);
+          showMessage('Authentication failed: Missing ID token', 'error');
+          return;
         }
 
         if (!userData || !userData.email) {
-          console.error('EngagePlus: No user data found in result', result);
-          throw new Error('Missing user data');
+          console.error('EngagePlus: No user data found in result', tokens);
+          showMessage('Authentication failed: Missing user data', 'error');
+          return;
         }
 
         if (debugMode) {
@@ -137,7 +137,7 @@
             accessToken: accessToken,
             refreshToken: refreshToken,
             user: userData,
-            provider: result.provider || 'unknown',
+            provider: tokens.provider || 'unknown',
           }),
         })
           .then(function (response) {
@@ -153,7 +153,7 @@
               showMessage('Successfully logged in as ' + data.username, 'status');
 
               // Store the access token in session storage.
-              sessionStorage.setItem('engageplus_token', tokens.accessToken);
+              sessionStorage.setItem('engageplus_token', accessToken);
 
               // Redirect if specified.
               if (data.redirect && data.redirect !== 'current') {
@@ -181,24 +181,7 @@
        */
       function handleAuthError(error, config) {
         console.error('EngagePlus: Authentication error', error);
-        showMessage('Authentication failed: ' + (error.message || 'Unknown error'), 'error');
-      }
-
-      /**
-       * Handle user logout.
-       */
-      function handleAuthLogout(user, config) {
-        if (debugMode) {
-          console.log('EngagePlus: User logged out', user);
-        }
-
-        // Clear any Drupal-side session data
-        // The EngagePlus.logout() method has already cleared widget session/localStorage
-        
-        // Optionally reload the page to show logged-out state
-        setTimeout(function () {
-          window.location.reload();
-        }, 500);
+        showMessage('Authentication failed: ' + (error.message || error.error || 'Unknown error'), 'error');
       }
 
       /**
@@ -225,4 +208,3 @@
   };
 
 })(Drupal, drupalSettings, once);
-

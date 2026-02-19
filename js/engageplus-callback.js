@@ -1,21 +1,22 @@
 /**
  * @file
  * Handles the EngagePlus authentication callback page.
+ * New API using OPWidget class from https://auth.engageplus.id/public/pkce.js
  */
 
 (function (drupalSettings) {
   'use strict';
 
   // This page is loaded after OAuth redirect from EngagePlus.
-  // The EngagePlus widget.js needs to be loaded to process the callback.
+  // The EngagePlus widget needs to be loaded to process the callback.
   
   console.log('EngagePlus: Callback page loaded');
 
   // Get configuration from Drupal settings
   var callbackSettings = drupalSettings.engageplus && drupalSettings.engageplus.callback;
-  if (!callbackSettings || !callbackSettings.clientId) {
+  if (!callbackSettings || !callbackSettings.orgId) {
     console.error('EngagePlus: Missing callback configuration');
-    showError('Configuration error: missing client ID');
+    showError('Configuration error: missing organization ID');
     return;
   }
 
@@ -26,10 +27,11 @@
   }
 
   // Check if the widget script is already loaded
-  if (typeof window.EngagePlus === 'undefined') {
+  if (typeof window.OPWidget === 'undefined') {
     // Load the EngagePlus widget script
+    const widgetUrl = callbackSettings.widgetUrl || 'https://auth.engageplus.id/public/pkce.js';
     const script = document.createElement('script');
-    script.src = 'https://engageplus.id/widget.js';
+    script.src = widgetUrl;
     script.async = false; // Load synchronously for callback
     script.onload = function () {
       console.log('EngagePlus: Widget script loaded on callback page');
@@ -49,39 +51,33 @@
    * Initialize the widget in callback mode
    */
   function initializeCallback() {
-    // The widget will automatically detect callback mode and process the tokens
     try {
       if (debugMode) {
         console.log('EngagePlus: Initializing callback with config', {
-          clientId: callbackSettings.clientId,
-          issuer: callbackSettings.issuer,
+          orgId: callbackSettings.orgId,
           redirectUri: callbackSettings.redirectUri
         });
       }
 
-      window.EngagePlus.init({
-        clientId: callbackSettings.clientId,
-        issuer: callbackSettings.issuer,
+      // Create new OPWidget instance for callback handling
+      const widget = new window.OPWidget({
+        orgId: callbackSettings.orgId,
         redirectUri: callbackSettings.redirectUri,
-        // Support both onSuccess (legacy) and onLogin (preferred)
-        onSuccess: function(result) {
+        onSuccess: function(tokens) {
           console.log('EngagePlus: Callback successful, processing result');
-          handleAuthSuccess(result);
-        },
-        onLogin: function(result) {
-          console.log('EngagePlus: Callback successful via onLogin, processing result');
-          handleAuthSuccess(result);
-        },
-        onLogout: function(user) {
-          if (debugMode) {
-            console.log('EngagePlus: User logged out during callback', user);
-          }
+          handleAuthSuccess(tokens);
         },
         onError: function(error) {
           console.error('EngagePlus: Callback error', error);
-          showError(error.description || error.error || 'Authentication failed');
+          showError(error.description || error.error || error.message || 'Authentication failed');
         }
       });
+
+      // Note: OPWidget automatically handles callback processing
+      // No need to mount for callback - it detects callback URL params
+      if (debugMode) {
+        console.log('EngagePlus: Callback widget initialized');
+      }
     } catch (error) {
       console.error('EngagePlus: Failed to initialize callback handler', error);
       showError('Failed to process authentication callback');
@@ -91,25 +87,23 @@
   /**
    * Handle successful authentication from callback
    */
-  function handleAuthSuccess(result) {
-    console.log('EngagePlus: Callback received result', result);
+  function handleAuthSuccess(tokens) {
+    console.log('EngagePlus: Callback received tokens', tokens);
     
-    // Extract tokens and user data from result object
-    // The widget returns {tokens: {access_token, id_token, refresh_token}, user: {...}, provider: '...'}
-    var tokens = result.tokens || result;
+    // Extract tokens and user data from result
     var accessToken = tokens.access_token || tokens.accessToken;
     var idToken = tokens.id_token || tokens.idToken;
     var refreshToken = tokens.refresh_token || tokens.refreshToken || null;
-    var userData = result.user || null;
+    var userData = tokens.user || null;
 
     if (!idToken) {
-      console.error('EngagePlus: No ID token found in callback result', result);
+      console.error('EngagePlus: No ID token found in callback result', tokens);
       showError('Missing ID token in authentication response');
       return;
     }
 
     if (!userData || !userData.email) {
-      console.error('EngagePlus: No user data found in callback result', result);
+      console.error('EngagePlus: No user data found in callback result', tokens);
       showError('Missing user data in authentication response');
       return;
     }
@@ -129,7 +123,7 @@
         accessToken: accessToken,
         refreshToken: refreshToken,
         user: userData,
-        provider: result.provider || 'unknown',
+        provider: tokens.provider || 'unknown',
       }),
     })
     .then(function (response) {
@@ -184,4 +178,3 @@
   }
 
 })(drupalSettings);
-

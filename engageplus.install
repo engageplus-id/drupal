@@ -71,3 +71,48 @@ function engageplus_update_8101() {
   return t('API Base URL already configured.');
 }
 
+/**
+ * Migrate to new EngagePlus widget API (OPWidget).
+ * Changes: clientId -> orgId, issuer removed, widget URL updated.
+ */
+function engageplus_update_8102() {
+  $config = \Drupal::configFactory()->getEditable('engageplus.settings');
+  
+  // Migrate client_id to org_id
+  $client_id = $config->get('client_id');
+  if (!empty($client_id) && empty($config->get('org_id'))) {
+    $config->set('org_id', $client_id);
+  }
+  
+  // Update widget URL to new endpoint
+  $widget_url = $config->get('widget_url');
+  if ($widget_url === 'https://engageplus.id/widget.js' || empty($widget_url)) {
+    $config->set('widget_url', 'https://auth.engageplus.id/public/pkce.js');
+  }
+  
+  // Remove deprecated settings
+  $config->clear('client_id');
+  $config->clear('api_base_url');
+  $config->clear('show_labels');
+  $config->clear('auth_mode');
+  $config->clear('button_text');
+  $config->clear('theme');
+  
+  // Remove all style settings (now managed in dashboard)
+  $style_keys = [
+    'width', 'max_width', 'padding',
+    'background_color', 'primary_color', 'text_color',
+    'secondary_text_color', 'button_hover_color',
+    'border_radius', 'border_color', 'border_width',
+    'box_shadow', 'button_border_radius', 'font_family',
+  ];
+  
+  foreach ($style_keys as $key) {
+    $config->clear('styles.' . $key);
+  }
+  
+  $config->save();
+  
+  return t('Migrated to new EngagePlus widget API (OPWidget). Please update your Organization ID in the configuration. Styling is now managed in the EngagePlus dashboard.');
+}
+

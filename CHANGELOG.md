@@ -111,6 +111,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Aligned implementation with https://engageplus.id/docs/widget
 - Added support for all documented widget methods and callbacks
 
+## [2.0.0] - 2025-11-09
+
+### BREAKING CHANGES
+- **New Widget API**: Migrated from old EngagePlus.init() to new OPWidget class
+- **Script URL Changed**: `https://engageplus.id/widget.js` → `https://auth.engageplus.id/public/pkce.js`
+- **Configuration Changes**: `clientId` → `orgId`, removed `issuer`/`api_base_url`
+- **Styling Removed**: All widget styling now managed in EngagePlus dashboard
+- **Widget Mount**: Now uses `new OPWidget(config).mount(selector)` pattern
+
+### Added
+- Support for new OPWidget JavaScript class
+- Automatic migration path from v1.x to v2.0
+- Update hook (8102) to migrate existing configurations
+- Backwards compatibility for existing client_id values
+- Link to EngagePlus webapp repository for reference
+
+### Removed
+- All widget styling configuration fields (colors, fonts, borders, etc.)
+- `show_labels` configuration (managed in dashboard)
+- `auth_mode` configuration (managed in dashboard)
+- `api_base_url` configuration (no longer needed)
+- Legacy `EngagePlus.init()`, `isAuthenticated()`, `getUser()` API calls
+
+### Changed
+- Widget initialization completely rewritten for new API
+- Callback handling updated for OPWidget
+- Configuration form simplified (only orgId and behavior settings)
+- JavaScript libraries updated to use new widget script
+- Template variables updated (client_id → org_id)
+
+### Migration Guide
+1. Run database updates: `drush updb`
+2. Your clientId will automatically migrate to orgId
+3. Update widget script URL in config (done automatically)
+4. Reconfigure widget styling in EngagePlus dashboard at https://engageplus.id
+5. Test authentication flow
+
+### Documentation
+- Based on: https://github.com/engageplus-id/webapp
+- New widget API uses PKCE flow
+- All styling managed centrally in dashboard
+
 ## [Unreleased]
 
 ### Planned Features
