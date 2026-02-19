@@ -1,0 +1,17 @@
+engageplus.settings:
+  route_name: engageplus.admin_settings
+  title: 'Settings'
+  base_route: engageplus.admin_settings
+  weight: 0
+
+engageplus.providers_tab:
+  route_name: engageplus.providers
+  title: 'OAuth Providers'
+  base_route: engageplus.admin_settings
+  weight: 10
+
+engageplus.widget_styling_tab:
+  route_name: engageplus.widget_styling
+  title: 'Widget Styling'
+  base_route: engageplus.admin_settings
+  weight: 20

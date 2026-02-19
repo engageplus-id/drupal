@@ -79,6 +79,39 @@ class EngagePlusConfigForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $form['api_settings']['api_key'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Management API Key'),
+      '#description' => $this->t('Your EngagePlus Management API key. Create one in your <a href="@url" target="_blank">EngagePlus dashboard</a> to enable advanced management features (provider configuration, widget styling, analytics, etc.). See <a href="@docs" target="_blank">API documentation</a>.', [
+        '@url' => 'https://engageplus.id/dashboard',
+        '@docs' => 'https://engageplus.id/docs/api',
+      ]),
+      '#default_value' => $config->get('api_key'),
+      '#attributes' => [
+        'placeholder' => 'ep_api_xxxxxxxxxxxxxxxxxxxxxxxx',
+      ],
+    ];
+
+    // Test API connection if key is set
+    if (!empty($config->get('api_key'))) {
+      /** @var \Drupal\engageplus\EngagePlusApiService $api */
+      $api = \Drupal::service('engageplus.api');
+      if ($api->testConnection()) {
+        $org = $api->getOrganization();
+        $form['api_settings']['api_status'] = [
+          '#markup' => '<div class="messages messages--status">' .
+            $this->t('✓ API Connected: @name', ['@name' => $org['name'] ?? 'Unknown']) .
+            '</div>',
+        ];
+      } else {
+        $form['api_settings']['api_status'] = [
+          '#markup' => '<div class="messages messages--error">' .
+            $this->t('✗ API Connection Failed - Check your API key') .
+            '</div>',
+        ];
+      }
+    }
+
     $form['api_settings']['widget_url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Widget Script URL'),
@@ -192,6 +225,7 @@ class EngagePlusConfigForm extends ConfigFormBase {
     $config = $this->config('engageplus.settings');
     
     $config->set('org_id', $form_state->getValue('org_id'))
+      ->set('api_key', $form_state->getValue('api_key'))
       ->set('widget_url', $form_state->getValue('widget_url'))
       ->set('auto_create_users', $form_state->getValue('auto_create_users'))
       ->set('default_role', $form_state->getValue('default_role'))

@@ -1,0 +1,4 @@
+services:
+  engageplus.api:
+    class: Drupal\engageplus\EngagePlusApiService
+    arguments: ['@http_client', '@config.factory', '@logger.factory:engageplus']

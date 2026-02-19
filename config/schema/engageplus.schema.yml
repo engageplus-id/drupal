@@ -5,6 +5,9 @@ engageplus.settings:
     org_id:
       type: string
       label: 'Organization ID'
+    api_key:
+      type: string
+      label: 'Management API Key'
     widget_url:
       type: string
       label: 'Widget Script URL'

@@ -6,6 +6,22 @@ engageplus.admin_settings:
   requirements:
     _permission: 'administer engageplus'
 
+engageplus.providers:
+  path: '/admin/config/people/engageplus/providers'
+  defaults:
+    _form: '\Drupal\engageplus\Form\EngagePlusProvidersForm'
+    _title: 'OAuth Providers'
+  requirements:
+    _permission: 'administer engageplus'
+
+engageplus.widget_styling:
+  path: '/admin/config/people/engageplus/widget-styling'
+  defaults:
+    _form: '\Drupal\engageplus\Form\EngagePlusWidgetStylingForm'
+    _title: 'Widget Styling'
+  requirements:
+    _permission: 'administer engageplus'
+
 engageplus.auth_callback:
   path: '/engageplus/auth/callback'
   defaults:

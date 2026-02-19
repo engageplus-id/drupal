@@ -1,0 +1,20 @@
+engageplus.admin:
+  title: 'EngagePlus'
+  route_name: engageplus.admin_settings
+  description: 'Configure EngagePlus OAuth authentication'
+  parent: system.admin_config_people
+  weight: 10
+
+engageplus.providers:
+  title: 'OAuth Providers'
+  route_name: engageplus.providers
+  description: 'Configure OAuth providers (Google, GitHub, Microsoft, LinkedIn)'
+  parent: engageplus.admin
+  weight: 10
+
+engageplus.widget_styling:
+  title: 'Widget Styling'
+  route_name: engageplus.widget_styling
+  description: 'Customize widget appearance'
+  parent: engageplus.admin
+  weight: 20

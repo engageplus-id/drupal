@@ -1,4 +1,5 @@
 org_id: ''
+api_key: ''
 widget_url: 'https://auth.engageplus.id/public/pkce.js'
 auto_create_users: true
 default_role: 'authenticated'

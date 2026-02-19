@@ -30,13 +30,28 @@ All sensitive configuration is stored in Drupal's configuration system and shoul
 2. **API Base URL** - Public URL (safe to expose)
 3. **User credentials** - Stored encrypted in Drupal database (never in code)
 
-### EngagePlus Client ID
+### EngagePlus Client ID & API Keys
 
 The EngagePlus `client_id` (e.g., `ep_8p6t8yr68vamh517xqs`) is a **public identifier** and is safe to expose. It is:
 - Visible in browser JavaScript
 - Used in public API calls
 - Similar to OAuth 2.0 client IDs
 - **Not a secret** - does not grant access by itself
+
+**Management API Key** (`api_key`) is a **SECRET** and should be protected:
+- ❌ Never commit to version control
+- ❌ Never expose in browser JavaScript
+- ❌ Never share publicly
+- ✅ Store securely in Drupal configuration
+- ✅ Rotate regularly
+- ✅ Restrict permissions to admin users only
+
+The API key grants full management access to your EngagePlus organization including:
+- Provider configuration
+- Widget styling
+- Analytics access
+- Webhook management
+- User data access
 
 ### What EngagePlus Does NOT Require
 

@@ -153,9 +153,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New widget API uses PKCE flow
 - All styling managed centrally in dashboard
 
+## [2.1.0] - 2025-11-09
+
+### Added - Management API Integration
+- **EngagePlus Management API Service** for full configuration via API
+- **API Key Configuration** - Configure Management API key in Drupal
+- **OAuth Provider Management** - Configure Google, GitHub, Microsoft, LinkedIn providers directly from Drupal
+- **Widget Styling Interface** - Customize widget appearance via Drupal admin UI
+- **API Connection Testing** - Automatic connection verification and organization display
+- **New Navigation Structure** - Tabbed interface for Settings, Providers, and Styling
+
+### New Features
+- `EngagePlusApiService` class for all API interactions
+- Providers management form (`/admin/config/people/engageplus/providers`)
+- Widget styling form (`/admin/config/people/engageplus/widget-styling`)
+- Real-time API connection status display
+- Automatic redirect URI management
+- Provider enable/disable functionality
+- Client ID and Client Secret management per provider
+- Widget color, layout, and display customization
+
+### API Endpoints Implemented
+- GET `/organizations/me` - Organization details
+- GET/PUT `/providers` - Provider management
+- GET/PUT `/widget/config` - Widget configuration
+- GET `/analytics` - Analytics and metrics (prepared)
+- GET/PUT `/email/provider` - Email provider config (prepared)
+- GET/POST/PUT/DELETE `/webhooks` - Webhook management (prepared)
+- GET/POST/DELETE `/redirect-uris` - Redirect URI management (prepared)
+
+### Documentation
+- Based on: https://engageplus.id/docs/api
+- Added security documentation for API key protection
+- Updated menu structure with new management pages
+
+### Security
+- API key stored securely in Drupal configuration
+- API key never exposed to browser
+- Added API key security guidelines to SECURITY.md
+- Password field for client secrets (not displayed after save)
+
 ## [Unreleased]
 
 ### Planned Features
+- Analytics dashboard page
+- Email provider configuration UI
+- Webhook management UI
 - Multi-language support (i18n)
 - Role mapping based on OAuth provider data
 - Custom user field mapping
